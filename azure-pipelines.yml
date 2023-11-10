@@ -13,10 +13,23 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(484c5704-5ddc-4c45-a0c4-a4012a9ce25f)'
+    appType: 'webAppLinux'
+    WebAppName: 'myweb'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'NODE|10-lts'
+    ScriptType: 'Inline Script'
+    InlineScript: 'hols mundo'
+- task: Ant@1
+  inputs:
+    buildFile: 'build.xml'
+    options: 
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
